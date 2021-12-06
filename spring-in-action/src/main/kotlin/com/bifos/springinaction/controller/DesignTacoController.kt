@@ -1,7 +1,8 @@
 package com.bifos.springinaction.controller
 
-import com.bifos.springinaction.domain.Ingredient
-import com.bifos.springinaction.domain.Taco
+import com.bifos.springinaction.domain.entity.Ingredient
+import com.bifos.springinaction.domain.entity.Taco
+import com.bifos.springinaction.domain.repository.IngredientRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -14,24 +15,29 @@ import javax.validation.Valid
 
 @Controller
 @RequestMapping("/design")
-class DesignTacoController {
+class DesignTacoController(
+    private val ingredientRepository: IngredientRepository
+) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @GetMapping
     fun showDesignForm(model: Model): String {
-        val ingredients = listOf(
-            Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-            Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-            Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-            Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-            Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-            Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-            Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-            Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-            Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-            Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE),
-        )
+//        val ingredients = listOf(
+//            Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
+//            Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
+//            Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
+//            Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
+//            Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
+//            Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
+//            Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
+//            Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
+//            Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
+//            Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE),
+//        )
+
+        val ingredients = mutableListOf<Ingredient>()
+        ingredientRepository.findAll().forEach { ingredients.add(it) }
 
         val types = Ingredient.Type.values()
         types.forEach {

@@ -1,4 +1,4 @@
-package com.bifos.springinaction.domain
+package com.bifos.springinaction.domain.entity
 
 data class Ingredient(
     val id: String,

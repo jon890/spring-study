@@ -1,6 +1,6 @@
 package com.bifos.springinaction.controller
 
-import com.bifos.springinaction.domain.Order
+import com.bifos.springinaction.domain.entity.Order
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

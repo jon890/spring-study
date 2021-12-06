@@ -1,9 +1,14 @@
-package com.bifos.springinaction.domain
+package com.bifos.springinaction.domain.entity
 
+import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class Taco(
+
+    var id: Long? = null,
+
+    var createdAt: LocalDateTime? = null,
 
     // 해당 어노테이션이 필드에 적용되도록 함
     @field:NotNull

@@ -1,11 +1,16 @@
-package com.bifos.springinaction.domain
+package com.bifos.springinaction.domain.entity
 
 import org.hibernate.validator.constraints.CreditCardNumber
+import java.time.LocalDateTime
 import javax.validation.constraints.Digits
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 
 data class Order(
+
+    var id: Long? = null,
+
+    var placedAt: LocalDateTime? = null,
 
     @field:NotBlank(message = "이름은 필수여야 합니다")
     var deliveryName: String? = null,
