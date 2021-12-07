@@ -14,7 +14,6 @@ class Taco {
     @field:Size(min = 5, message = "이름은 최소한 5자 이상이어야 합니다")
     var name: String? = null
 
-    // todo 왜 바인딩이 안될까..?
     @field:Size(min = 1, message = "최소한 한 개의 구성요소는 선택해야 합니다")
     var ingredients: List<Ingredient> = mutableListOf()
 

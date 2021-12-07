@@ -28,10 +28,13 @@ class JdbcTacoRepository(
 
     private fun saveTacoInfo(taco: Taco): Long {
         taco.createdAt = LocalDateTime.now()
-        val psc = PreparedStatementCreatorFactory(
+        val pscFactory = PreparedStatementCreatorFactory(
             "insert into Taco (name, createdAt) values (?, ?)",
             Types.VARCHAR, Types.TIMESTAMP
-        ).newPreparedStatementCreator(
+        )
+        pscFactory.setReturnGeneratedKeys(true)
+
+        val psc = pscFactory.newPreparedStatementCreator(
             listOf(
                 taco.name,
                 Timestamp(taco.createdAt!!.parseLong())

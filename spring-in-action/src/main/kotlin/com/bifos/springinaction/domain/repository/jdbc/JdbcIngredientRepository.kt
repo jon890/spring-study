@@ -17,7 +17,7 @@ class JdbcIngredientRepository(
     }
 
     override fun findById(id: String): Ingredient? {
-        return jdbc.queryForObject("select id, name type from Ingredient where id = ?", this::mapRowToIngredient, id)
+        return jdbc.queryForObject("select id, name, type from Ingredient where id = ?", this::mapRowToIngredient, id)
     }
 
     override fun save(ingredient: Ingredient): Ingredient {
