@@ -1,6 +1,7 @@
-package com.bifos.springinaction.domain.repository
+package com.bifos.springinaction.domain.repository.jdbc
 
 import com.bifos.springinaction.domain.entity.Ingredient
+import com.bifos.springinaction.domain.repository.IngredientRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet

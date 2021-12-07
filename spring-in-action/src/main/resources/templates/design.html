@@ -11,14 +11,14 @@
     <img th:src="@{/images/TacoCloud.png}" />
 
     <form method="POST" th:object="${taco}">
-        <span class=" validationError"
+        <span class="validationError"
             th:if="${#fields.hasErrors('ingredients')}"
-            th:erros="*{ingredients}">타코 구성 오류
+            th:erros="*{ingredients}">타코 구성 정보 오류
         </span>
 
         <div class="grid">
             <div class="ingredient-group" id="wraps">
-                <h3>당신의 랩을 디자인해보세요 :</h3>
+                <h3>랩을 디자인해보세요 :</h3>
                 <div th:each="ingredient : ${wrap}">
                     <input name="ingredients" type="checkbox" th:value="${ingredient.id}" />
                     <span th:text="${ingredient.name}">INGREDIENT</span>
@@ -61,7 +61,6 @@
         <div>
             <h3>당신의 타코 이름을 입력해주세요:</h3>
             <input type="text" th:field="*{name}" />
-            <span th:text="${#fields.hasErrors('name')}">XXX</span>
             <span class="validationError"
                   th:if="${#fields.hasErrors('name')}"
                   th:errors="*{name}">이름 오류

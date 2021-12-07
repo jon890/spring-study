@@ -1,7 +1,8 @@
-package com.bifos.springinaction.domain.repository
+package com.bifos.springinaction.domain.repository.jdbc
 
 import com.bifos.springinaction.domain.entity.Ingredient
 import com.bifos.springinaction.domain.entity.Taco
+import com.bifos.springinaction.domain.repository.TacoRepository
 import com.bifos.springinaction.util.TimeUtil.parseLong
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory

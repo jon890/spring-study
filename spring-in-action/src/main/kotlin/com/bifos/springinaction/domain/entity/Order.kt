@@ -37,8 +37,14 @@ data class Order(
 
     @field:Digits(integer = 3, fraction = 0, message = "잘못된 CVV 입니다")
     val ccCVV: String? = null,
+
+    val tacos: MutableList<Taco> = mutableListOf()
 ) {
     override fun toString(): String {
         return "Order(deliveryName='$deliveryName', deliveryStreet='$deliveryStreet', deliveryCity='$deliveryCity', deliveryState='$deliveryState', deliveryZip='$deliveryZip', ccNumber='$ccNumber', ccExpiration='$ccExpiration', ccCVV='$ccCVV')"
+    }
+
+    fun addDesign(taco: Taco) {
+        tacos.add(taco)
     }
 }
