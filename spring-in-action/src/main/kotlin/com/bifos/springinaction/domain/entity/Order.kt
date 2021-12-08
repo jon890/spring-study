@@ -1,13 +1,19 @@
 package com.bifos.springinaction.domain.entity
 
+import org.hibernate.Hibernate
 import org.hibernate.validator.constraints.CreditCardNumber
 import java.time.LocalDateTime
+import javax.persistence.*
 import javax.validation.constraints.Digits
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 
-data class Order(
+@Entity
+@Table(name = "Taco_Order") // Order 은 SQL 의 예약어이므로 직접 테이블명을 선언
+class Order(
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
     var placedAt: LocalDateTime? = null,
@@ -38,13 +44,31 @@ data class Order(
     @field:Digits(integer = 3, fraction = 0, message = "잘못된 CVV 입니다")
     val ccCVV: String? = null,
 
+    @ManyToMany(targetEntity = Taco::class)
     val tacos: MutableList<Taco> = mutableListOf()
 ) {
-    override fun toString(): String {
-        return "Order(deliveryName='$deliveryName', deliveryStreet='$deliveryStreet', deliveryCity='$deliveryCity', deliveryState='$deliveryState', deliveryZip='$deliveryZip', ccNumber='$ccNumber', ccExpiration='$ccExpiration', ccCVV='$ccCVV')"
+    @PrePersist
+    fun placedAt() {
+        placedAt = LocalDateTime.now()
     }
 
     fun addDesign(taco: Taco) {
         tacos.add(taco)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Order
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , placedAt = $placedAt , deliveryName = $deliveryName , deliveryStreet = $deliveryStreet , deliveryCity = $deliveryCity , deliveryState = $deliveryState , deliveryZip = $deliveryZip , ccNumber = $ccNumber , ccExpiration = $ccExpiration , ccCVV = $ccCVV )"
+    }
+
 }

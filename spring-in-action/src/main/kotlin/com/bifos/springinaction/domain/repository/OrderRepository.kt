@@ -1,8 +1,8 @@
 package com.bifos.springinaction.domain.repository
 
 import com.bifos.springinaction.domain.entity.Order
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface OrderRepository {
+interface OrderRepository : JpaRepository<Order, Long> {
 
-    fun save(order: Order): Order
 }

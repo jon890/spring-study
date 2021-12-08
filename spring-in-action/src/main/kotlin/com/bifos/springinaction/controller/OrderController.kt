@@ -42,7 +42,7 @@ class OrderController(
          * 주문 객체가 DB 에 저장된 후에는 세션에 보존할 필요가 없다
          * 제거하지 않으면 이전 주문 및 연관된 타코가 세션에 남게 되어
          * 다음 주문은 이전 주문에 포함된 타코 객체를 가지고 시작하게 된다
-         * 
+         *
          * 따라서 setComplete() 를 호출해 세션을 재설정한다
          */
         sessionStatus.setComplete()

@@ -11,6 +11,6 @@ class IngredientByIdConverter(
 ) : Converter<String, Ingredient?> {
 
     override fun convert(source: String): Ingredient? {
-        return ingredientRepository.findById(source)
+        return ingredientRepository.findById(source).orElseGet(null)
     }
 }

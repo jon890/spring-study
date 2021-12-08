@@ -1,8 +1,8 @@
 package com.bifos.springinaction.domain.repository
 
 import com.bifos.springinaction.domain.entity.Taco
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface TacoRepository {
+interface TacoRepository : JpaRepository<Taco, Long> {
 
-    fun save(design : Taco) : Taco
 }

@@ -4,7 +4,16 @@ plugins {
     id("org.springframework.boot") version "2.6.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.0"
-    kotlin("plugin.spring") version "1.6.0"
+    kotlin("plugin.spring") version "1.6.0" // wrapped all-open
+    kotlin("plugin.jpa") version "1.6.0" // wrapper no-arg
+}
+
+allOpen {
+    annotation("javax.persistence.Entity") // @Entity 가 붙은 클래스에 한해서 all open 플러그인 적용
+}
+
+noArg {
+    annotation("javax.persistence.Entity") // @Entity 가 붙은 클래스에 한해서 no arg 플러그인 적용
 }
 
 group "com.bifos"
@@ -22,6 +31,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 

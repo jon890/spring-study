@@ -1,12 +1,8 @@
 package com.bifos.springinaction.domain.repository
 
 import com.bifos.springinaction.domain.entity.Ingredient
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface IngredientRepository {
+interface IngredientRepository : JpaRepository<Ingredient, String> {
 
-    fun findAll(): Iterable<Ingredient>
-
-    fun findById(id: String): Ingredient?
-
-    fun save(ingredient: Ingredient): Ingredient
 }
