@@ -37,10 +37,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
-
     // kotlin
     implementation(kotlin("reflect"))
     implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
 
     // db
     runtimeOnly("com.h2database:h2")
@@ -49,8 +49,9 @@ dependencies {
     // spring dev tools
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    // test
+    // spring-test, json-path, junit, assertj-core, mockito-core, hamcrest-core, jsonassert 포함
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.withType<KotlinCompile> {
