@@ -1,12 +1,20 @@
 package com.bifos.springmaster.domain
 
 import java.time.LocalDate
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 data class Todo(
     val id: Int,
+
+    @NotNull
     val user: String,
+
+    @Size(min = 9, message = "최소 10자는 입력해주세요")
     var desc: String,
+
     var targetDate: LocalDate,
+
     var isDone: Boolean
 ) {
 

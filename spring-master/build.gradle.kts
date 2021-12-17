@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+
     kotlin("jvm") version "1.6.0"
     kotlin("plugin.spring") version "1.6.0" // wrapped all-open
     kotlin("plugin.jpa") version "1.6.0" // wrapper no-arg
@@ -20,16 +21,33 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // hateoas
+    implementation("org.springframework.boot:spring-boot-starter-hateoas")
+    implementation("org.springframework.hateoas:spring-hateoas")
+
+    // openapi
+    // todo kbt : version 은 외부에서 지정할 수 있게
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.1")
+    // implementation("org.springdoc:springdoc-openapi-webmvc-core:1.6.1")
+    // implementation("org.springdoc:springdoc-openapi-hateoas:1.6.1")
+    // implementation("org.springdoc:springdoc-openapi-security:1.6.1")
+    // implementation("org.springdoc:springdoc-openapi-kotlin:1.6.1")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 
     // kotlin
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(kotlin("reflect"))
+    implementation(kotlin("stdlib"))
 
     // db
     runtimeOnly("com.h2database:h2")
+
+    // dev only
+    // spring dev tools
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation(kotlin("stdlib-jdk8"))
