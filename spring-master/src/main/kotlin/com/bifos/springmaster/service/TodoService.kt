@@ -28,20 +28,20 @@ class TodoService {
         return newTodo
     }
 
-    fun retrieveTodo(id: Int) = todos.find { it.id == id }
+    fun retrieveTodo(id: Int) = todos.find { it.id == id } ?: throw EntityNotFoundException("할 일이 존재하지 않습니다")
+
 
     fun update(todo: Todo): Todo {
-        retrieveTodo(todo.id)?.let {
+        retrieveTodo(todo.id).let {
             it.update(todo)
-            return todo
-        } ?: throw EntityNotFoundException("할 일이 존재하지 않습니다")
+            return it
+        }
     }
 
-    fun deleteById(id : Int) : Todo {
-        val todo = todos.find { it.id == id }
-        todo?.let {
-            todos.remove(todo)
-            return todo
-        } ?: throw EntityNotFoundException("할 일이 존재하지 않습니다")
+    fun deleteById(id: Int): Todo {
+        retrieveTodo(id).let {
+            todos.remove(it)
+            return it
+        }
     }
 }
