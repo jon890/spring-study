@@ -1,0 +1,5 @@
+spring:
+  security:
+    user:
+      name: BiFoS
+      password: 1234

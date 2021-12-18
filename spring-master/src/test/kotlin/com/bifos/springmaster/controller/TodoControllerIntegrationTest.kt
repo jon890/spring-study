@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.skyscreamer.jsonassert.JSONAssert
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpEntity
@@ -23,12 +26,13 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [SpringMasterApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration(exclude = [SecurityAutoConfiguration::class]) // Security AutoConfig 해제
 class TodoControllerIntegrationTest {
 
     @Autowired
     private lateinit var template: TestRestTemplate
 
-    val headers = createHeaders("user-name", "user-password")
+    val headers = createHeaders("BiFoS", "1234")
 
     /**
      * 인증 헤더를 만드는 메소드
