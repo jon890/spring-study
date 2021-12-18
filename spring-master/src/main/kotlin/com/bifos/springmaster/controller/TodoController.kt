@@ -64,6 +64,6 @@ class TodoController(
     @DeleteMapping("/users/{name}/todos/{id}")
     fun deleteTodo(@PathVariable name: String, @PathVariable id: Int): ResponseEntity<Unit> {
         todoService.deleteById(id)
-        return ResponseEntity.notFound().build()
+        return ResponseEntity.noContent().build()
     }
 }

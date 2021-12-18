@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
+import javax.persistence.EntityNotFoundException
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(controllers = [TodoController::class])
@@ -60,24 +61,20 @@ class TodoControllerTest {
     @Test
     fun retrieveTodo() {
         // given
-        val mockList = listOf(
-            Todo(1, "잭", "스프링 MVC 공부", LocalDate.now(), false),
-            Todo(2, "잭", "스프링 부트 공부", LocalDate.now(), false),
-        )
+        val mockTodo = Todo(1, "Jack", "spring mvc study", LocalDate.now(), false)
 
-        `when`(todoService.retrieveTodo(anyInt())).thenReturn(mockList[0])
+        `when`(todoService.retrieveTodo(anyInt())).thenReturn(mockTodo)
 
         // when
         val result = mvc.perform(
-            MockMvcRequestBuilders.get("/users/잭/todos/1")
+            MockMvcRequestBuilders.get("/users/Jack/todos/1")
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
             .andReturn()
 
         // then
-        val expected =
-            "[{id:1,user:\"잭\",desc:\"스프링 MVC 공부\",done:false}]"
+        val expected = "{id:1,user:\"Jack\",desc:\"spring mvc study\",done:false}"
         JSONAssert.assertEquals(expected, result.response.contentAsString, false)
     }
 
@@ -86,7 +83,6 @@ class TodoControllerTest {
     fun createTodo() {
         // given
         val mockTodo = Todo(CREATED_TODO_ID, "잭", "스프링 MVC 공부", LocalDate.now(), false)
-
         val todo = "{user:\"잭\",desc:\"스프링 시큐리티 공부\",done:false}"
 
         `when`(todoService.addTodo(anyString(), anyString(), isNull(), anyBoolean())).thenReturn(mockTodo)
@@ -109,7 +105,7 @@ class TodoControllerTest {
 
         val todo = "{user:\"잭\",desc:\"스프링\",done:false}"
 
-        `when`(todoService.addTodo(anyString(), anyString(), isNull(), anyBoolean())).thenReturn(mockTodo)
+        `when`(todoService.addTodo(anyString(), anyString(), isNotNull(), anyBoolean())).thenReturn(mockTodo)
 
         // when
         mvc.perform(
@@ -126,14 +122,14 @@ class TodoControllerTest {
     fun updateTodo() {
         // given
         val UPDATED_TODO_ID = 1
-        val mockTodo = Todo(UPDATED_TODO_ID, "잭", "스프링 MVC 공부 구아아아악", LocalDate.now(), false)
-        val todo = "{user:\"잭\",desc:\"스프링 MVC 공부 구아아아악\",done:false}"
+        val mockTodo = Todo(UPDATED_TODO_ID, "jack", "spring mvc study 1111", LocalDate.now(), false)
+        val todo = "{user:\"jack\",desc:\"spring mvc study 1111\",done:false}"
 
         `when`(todoService.update(mockTodo)).thenReturn(mockTodo)
 
         // when
         val result = mvc.perform(
-            MockMvcRequestBuilders.post("/users/잭/todos/${UPDATED_TODO_ID}")
+            MockMvcRequestBuilders.put("/users/jack/todos/${UPDATED_TODO_ID}")
                 .content(todo)
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -143,22 +139,32 @@ class TodoControllerTest {
         JSONAssert.assertEquals(todo, result.response.contentAsString, false)
     }
 
-    @DisplayName("Todo를 삭제합니다")
+    @DisplayName("Todo를 삭제한다")
+    @Test
     fun deleteTodo() {
         // given
-        val mockTodo = Todo(1, "잭", "스프링 MVC 공부", LocalDate.now(), false)
-        val todo = "{user:\"잭\",desc:\"스프링 MVC 공부\",done:false}"
+        val mockTodo = Todo(1, "jack", "spring mvc study 1111", LocalDate.now(), false)
+        val todo = "{user:\"jack\",desc:\"spring mvc study 1111\",done:false}"
 
         `when`(todoService.deleteById(anyInt())).thenReturn(mockTodo)
 
         // when
         val result = mvc.perform(
-            MockMvcRequestBuilders.post("/users/잭/todos/${mockTodo.id}")
+            MockMvcRequestBuilders.delete("/users/jack/todos/${mockTodo.id}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNoContent)
+            .andReturn()
+    }
+
+    @DisplayName("Todo를 삭제중 오류 발생")
+    @Test
+    fun deleteTodo_error() {
+        `when`(todoService.deleteById(anyInt())).thenThrow(EntityNotFoundException::class.java)
+        mvc.perform(
+            MockMvcRequestBuilders.delete("/users/Jack/todos/1")
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNotFound)
-            .andReturn()
-
-        JSONAssert.assertEquals(todo, result.response.contentAsString, false)
     }
 }

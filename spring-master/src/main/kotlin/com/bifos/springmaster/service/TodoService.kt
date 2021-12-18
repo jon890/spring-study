@@ -13,9 +13,9 @@ class TodoService {
         var todoCount = 3
 
         init {
-            todos.add(Todo(1, "잭", "스프링 MVC를 배우자", LocalDate.now(), false))
-            todos.add(Todo(2, "잭", "스트럿츠를 배우자", LocalDate.now(), false))
-            todos.add(Todo(3, "질", "하이버네이트를 배우자", LocalDate.now(), false))
+            todos.add(Todo(1, "포스", "스프링 MVC를 배우자", LocalDate.now(), false))
+            todos.add(Todo(2, "포스", "스트럿츠를 배우자", LocalDate.now(), false))
+            todos.add(Todo(3, "병태", "하이버네이트를 배우자", LocalDate.now(), false))
         }
     }
 
@@ -23,7 +23,8 @@ class TodoService {
 
     fun addTodo(name: String, desc: String, targetDate: LocalDate, isDone: Boolean): Todo {
         todoCount++
-        val newTodo = Todo(todoCount, name, desc, targetDate, isDone)
+        val newTodo = Todo(todoCount, name, desc,
+            targetDate, isDone)
         todos.add(newTodo)
         return newTodo
     }

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class Todo(
-    val id: Int,
+    val id: Int = -1,
 
     @NotNull
     val user: String,
@@ -13,7 +13,7 @@ data class Todo(
     @Size(min = 9, message = "최소 10자는 입력해주세요")
     var desc: String,
 
-    var targetDate: LocalDate,
+    var targetDate: LocalDate = LocalDate.now(),
 
     var isDone: Boolean
 ) {
