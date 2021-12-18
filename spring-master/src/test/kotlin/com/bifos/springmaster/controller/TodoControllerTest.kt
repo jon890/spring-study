@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
-import javax.persistence.EntityNotFoundException
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(controllers = [TodoController::class])
@@ -160,7 +159,7 @@ class TodoControllerTest {
     @DisplayName("Todo를 삭제중 오류 발생")
     @Test
     fun deleteTodo_error() {
-        `when`(todoService.deleteById(anyInt())).thenThrow(EntityNotFoundException::class.java)
+        `when`(todoService.deleteById(anyInt())).thenThrow(RuntimeException::class.java)
         mvc.perform(
             MockMvcRequestBuilders.delete("/users/Jack/todos/1")
                 .accept(MediaType.APPLICATION_JSON)

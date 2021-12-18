@@ -3,7 +3,6 @@ package com.bifos.springmaster.service
 import com.bifos.springmaster.domain.Todo
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import javax.persistence.EntityNotFoundException
 
 @Service
 class TodoService {
@@ -23,14 +22,15 @@ class TodoService {
 
     fun addTodo(name: String, desc: String, targetDate: LocalDate, isDone: Boolean): Todo {
         todoCount++
-        val newTodo = Todo(todoCount, name, desc,
-            targetDate, isDone)
+        val newTodo = Todo(
+            todoCount, name, desc,
+            targetDate, isDone
+        )
         todos.add(newTodo)
         return newTodo
     }
 
-    fun retrieveTodo(id: Int) = todos.find { it.id == id } ?: throw EntityNotFoundException("할 일이 존재하지 않습니다")
-
+    fun retrieveTodo(id: Int) = todos.find { it.id == id } ?: throw RuntimeException("할 일이 존재하지 않습니다")
 
     fun update(todo: Todo): Todo {
         retrieveTodo(todo.id).let {

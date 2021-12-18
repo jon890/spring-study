@@ -34,8 +34,8 @@ dependencies {
     // implementation("org.springdoc:springdoc-openapi-security:1.6.1")
     // implementation("org.springdoc:springdoc-openapi-kotlin:1.6.1")
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    // security - core, config, web 포함
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // kotlin
     implementation(kotlin("reflect"))
@@ -52,6 +52,7 @@ dependencies {
     // test
     // spring-test, json-path, junit, assertj-core, mockito-core, hamcrest-core, jsonassert 포함
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-security-test")
 }
 
 tasks.withType<KotlinCompile> {
