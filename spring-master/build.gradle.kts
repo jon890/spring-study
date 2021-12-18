@@ -52,7 +52,7 @@ dependencies {
     // test
     // spring-test, json-path, junit, assertj-core, mockito-core, hamcrest-core, jsonassert 포함
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-security-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<KotlinCompile> {
