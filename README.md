@@ -12,3 +12,8 @@
 2. Spring Security 책을 따로사서 봐야 할 거 같음.
 3. JPA 는 김영한 님 책으로 1독 완료
 4. 따라서 스프링 5 마스터 2/e 를 봐볼 예정 JWT로 Spring Security를 다루는 부분이 있다..!!
+
+### 2012-12-20
+1. Spring Master를 읽는중.. Spring Security 설명이나 원리가 부족하다는 것을 느낌
+2. 결국 Spring Security 3/e 를 사서 읽고 있다..!!
+3. Spring Security 도 다 하면 마이크로 서비스, Spring Cloud, Spring Web Flux 를 공부해볼 예정
