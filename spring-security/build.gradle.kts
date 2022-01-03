@@ -21,18 +21,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-
-    // hateoas
-    implementation("org.springframework.boot:spring-boot-starter-hateoas")
-    implementation("org.springframework.hateoas:spring-hateoas")
-
-    // openapi
-    // todo kbt : version 은 외부에서 지정할 수 있게
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.1")
-    // implementation("org.springdoc:springdoc-openapi-webmvc-core:1.6.1")
-    // implementation("org.springdoc:springdoc-openapi-hateoas:1.6.1")
-    // implementation("org.springdoc:springdoc-openapi-security:1.6.1")
-    // implementation("org.springdoc:springdoc-openapi-kotlin:1.6.1")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
 
     // security - core, config, web 포함
     implementation("org.springframework.boot:spring-boot-starter-security")
