@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 /**
  * https://docs.spring.io/spring-security/site/docs/current/reference/html/test-method.html
- */
+/Users/gimbyeongtae/Downloads/Spring Security Code_Revised/chapter02/chapter02.00-calendar/src/test/java/com/packtpub/springsecurity/CalendarApplicationTests.java */
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(controllers = [EventsController::class])
 class CalendarApplicationTests {

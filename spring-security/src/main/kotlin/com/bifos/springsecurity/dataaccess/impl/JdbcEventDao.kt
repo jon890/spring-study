@@ -70,7 +70,7 @@ class JdbcEventDao(private val jdbcTemplate: JdbcTemplate) : EventDao {
 
     override fun findForUser(userId: Int): List<Event> {
         return jdbcTemplate.query(
-            "${EVENT_QUERY} and (e.owner = ? or e.attendee = ? order by e.id",
+            "${EVENT_QUERY} and (e.owner = ? or e.attendee = ?) order by e.id",
             EVENT_ROW_MAPPER,
             userId,
             userId

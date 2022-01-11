@@ -81,7 +81,7 @@ class JdbcCalendarUserDao(private val jdbcTemplate: JdbcTemplate) : CalendarUser
         private const val CALENDAR_USER_QUERY =
             "select id, email, password, first_name, last_name from calendar_users where"
 
-        private val CALENDAR_USER_MAPPER = CalendarUserRowMapper("calendar_users")
+        private val CALENDAR_USER_MAPPER = CalendarUserRowMapper("calendar_users.")
 
         /**
          * Create a new RowMapper that resolvers [com.bifos.springsecurity.domain.CalendarUser]'s
@@ -94,12 +94,12 @@ class JdbcCalendarUserDao(private val jdbcTemplate: JdbcTemplate) : CalendarUser
         class CalendarUserRowMapper(private val columnLabelPrefix: String) : RowMapper<CalendarUser> {
             override fun mapRow(rs: ResultSet, rowNum: Int): CalendarUser {
                 return CalendarUser(
-                    email = rs.getString("${columnLabelPrefix}.email"),
-                    password = rs.getString("${columnLabelPrefix}.password"),
-                    firstName = rs.getString("${columnLabelPrefix}.first_name"),
-                    lastName = rs.getString("${columnLabelPrefix}.last_name"),
+                    email = rs.getString("${columnLabelPrefix}email"),
+                    password = rs.getString("${columnLabelPrefix}password"),
+                    firstName = rs.getString("${columnLabelPrefix}first_name"),
+                    lastName = rs.getString("${columnLabelPrefix}last_name"),
                 ).apply {
-                    id = rs.getInt("${columnLabelPrefix}.id")
+                    id = rs.getInt("${columnLabelPrefix}id")
                 }
             }
         }
