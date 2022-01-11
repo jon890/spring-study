@@ -12,6 +12,4 @@ spring:
   h2:
     console:
       enabled: true
-
-  resources:
-    cache-period: 0
+      path: /admin/h2

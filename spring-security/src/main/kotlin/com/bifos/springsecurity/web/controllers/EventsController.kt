@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.*
 import javax.validation.Valid
 
+
 @Controller
 @RequestMapping("/events")
 class EventsController(val calendarService: CalendarService, val userContext: UserContext) {
@@ -39,6 +40,46 @@ class EventsController(val calendarService: CalendarService, val userContext: Us
         return "events/show"
     }
 
+    @RequestMapping("/form")
+    fun createEventForm(@ModelAttribute createEventForm: CreateEventForm?): String {
+        return "events/create"
+    }
+
+    @PostMapping("/new")
+    fun createEvent(
+        @Valid createEventForm: CreateEventForm,
+        result: BindingResult,
+        redirectAttribute: RedirectAttributes
+    ): String {
+        if (result.hasErrors()) {
+            return "events/create"
+        }
+
+        val attendee = calendarService.findUserByEmail(createEventForm.attendeeEmail!!)
+        if (attendee == null) {
+            result.rejectValue(
+                "attendeeEmail",
+                "attendeeEmail.missing",
+                "Could not find a user for the provided Attendee Email"
+            )
+        }
+
+        if (result.hasErrors()) {
+            return "events/create"
+        }
+
+        val event = Event(
+            attendee = attendee, description = createEventForm.description,
+            owner = userContext.getCurrentUser(),
+            summary = createEventForm.summary!!,
+            `when` = createEventForm.`when`
+        )
+
+        calendarService.createEvent(event)
+        redirectAttribute.addFlashAttribute("message", "Successfully added the new event")
+        return "redirect:/events/my"
+    }
+
     /**
      * Populates the form for creating an event with valid information.
      * Useful so that users do not have to think
@@ -62,40 +103,5 @@ class EventsController(val calendarService: CalendarService, val userContext: Us
         createEventForm.attendeeEmail = attendee.email
 
         return "events/create"
-    }
-
-    @PostMapping("/new")
-    fun createEvent(
-        @Valid createEventForm: CreateEventForm,
-        result: BindingResult,
-        redirectAttribute: RedirectAttributes
-    ): String {
-        if (result.hasErrors()) {
-            return "events/create"
-        }
-
-        val attendee = calendarService.findUserByEmail(createEventForm.attendeeEmail)
-        if (attendee == null) {
-            result.rejectValue(
-                "attendeeEmail",
-                "attendeeEmail.missing",
-                "Could not find a user for the provided Attendee Email"
-            )
-        }
-
-        if (result.hasErrors()) {
-            return "events/create"
-        }
-
-        val event = Event(
-            attendee = attendee, description = createEventForm.description,
-            owner = userContext.getCurrentUser(),
-            summary = createEventForm.summary,
-            `when` = createEventForm.`when`
-        )
-
-        calendarService.createEvent(event)
-        redirectAttribute.addFlashAttribute("message", "Successfully added the new event")
-        return "redirect:/events/my"
     }
 }

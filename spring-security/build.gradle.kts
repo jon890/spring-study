@@ -27,6 +27,10 @@ dependencies {
     // security - core, config, web 포함
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    // thymeleaf security 지원
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+
+
     // kotlin
     implementation(kotlin("reflect"))
     implementation(kotlin("stdlib"))

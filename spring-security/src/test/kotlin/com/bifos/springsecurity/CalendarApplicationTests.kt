@@ -1,11 +1,10 @@
 package com.bifos.springsecurity
 
-import com.bifos.springsecurity.web.controllers.EventsController
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -14,9 +13,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 /**
  * https://docs.spring.io/spring-security/site/docs/current/reference/html/test-method.html
- */
+/Users/gimbyeongtae/Downloads/Spring Security Code_Revised/chapter02/chapter02.00-calendar/src/test/java/com/packtpub/springsecurity/CalendarApplicationTests.java */
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(controllers = [EventsController::class])
+@SpringBootTest
 class CalendarApplicationTests {
 
     @Autowired

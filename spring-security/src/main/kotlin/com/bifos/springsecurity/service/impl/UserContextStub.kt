@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class UserContextStub(
-    val userService: CalendarUserDao
+    private val userService: CalendarUserDao
 ) : UserContext {
 
     /**
@@ -22,7 +22,7 @@ class UserContextStub(
      */
     private var currentUserId = 0
 
-    override fun getCurrentUser(): CalendarUser? {
+    override fun getCurrentUser(): CalendarUser {
         return userService.getUser(currentUserId)
     }
 

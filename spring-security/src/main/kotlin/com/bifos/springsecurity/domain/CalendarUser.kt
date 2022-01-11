@@ -24,7 +24,6 @@ class CalendarUser(
      *
      * @return
      */
-    // todo kbt : 자바로 변환하여 어디에 애노테이션이 붙어있는지 확인해보자
     @get:JsonIgnore
     var password: String? = null
 

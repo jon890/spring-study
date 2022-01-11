@@ -14,21 +14,19 @@ import javax.validation.constraints.NotNull
  *
  * @author Rob Winch (converted by BiFoS)
  */
-class CreateEventForm(
+class CreateEventForm {
 
     @field:NotEmpty(message = "Attendee email is required")
     @field:Email(message = "Attendee Email must be a valid email")
-    var attendeeEmail: String,
+    var attendeeEmail: String? = null
 
     @field:NotEmpty(message = "Summary is required")
-    var summary: String,
+    var summary: String? = null
 
     @field:NotEmpty(message = "Description is required")
-    var description: String,
+    var description: String? = null
 
     @field:DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @field:NotNull(message = "Event Date/Time is required")
-    var `when`: Calendar
-) {
-
+    var `when`: Calendar? = null
 }
