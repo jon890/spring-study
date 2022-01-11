@@ -1,4 +1,4 @@
-package com.bifos.springsecurity.web.configuration
+package com.bifos.springsecurity.configuration
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
@@ -28,11 +28,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.let {
             it.inMemoryAuthentication()
-                .withUser("user").password("{noop}user").roles("USER")
-                .and().withUser("admin").password("{noop}admin").roles("USER", "ADMIN")
-                .and().withUser("user1@example.com").password("{noop}user1").roles("USER")
-                .and().withUser("admin1@example.com").password("{noop}admin1").roles("USER", "ADMIN")
-            ;
+                .withUser("user1@example.com").password("user1").roles("USER")
+
+            logger.info("***** Password for user 'user1@example.com' is 'user1'");
         }
     }
 
@@ -63,42 +61,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
      *     Spring Security 3 to 4 migration</a>
      */
     override fun configure(http: HttpSecurity?) {
+
         http?.let {
             it.authorizeRequests()
-                .antMatchers("/static/**").permitAll()
-
-                // H2 console:
-                .antMatchers("/admin/h2/**").permitAll()
-
-                .antMatchers("/").permitAll()
-                // Spring Expression Language SPEL 을 이용하여 판별 가능
-//                .antMatchers("/").access("hasAnyRole('ANONYMOUS', 'USER'")
-
-                .antMatchers("/login/*").permitAll()
-                .antMatchers("/logout/*").permitAll()
-                .antMatchers("/admin/*").hasRole("ADMIN")
-                .antMatchers("/events/").hasRole("ADMIN")
-                .antMatchers("/**").hasRole("USER")
-
-                .and().exceptionHandling().accessDeniedPage("/errors/403")
-
+                .antMatchers("/**").access("hasRole('USER')")
                 .and().formLogin()
-                .loginPage("/login/form")
-                .loginProcessingUrl("/login")
-                .failureUrl("/login/form?error")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/default")
-                .permitAll() // 무슨 의미일까?
-
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login/form?logout")
-                .permitAll()
-
                 .and().httpBasic()
-
-                .and().anonymous()
+                .and().logout()
 
                 // CSRF is enabled by default, with Java Config
                 .and().csrf().disable()
