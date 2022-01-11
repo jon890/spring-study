@@ -69,7 +69,8 @@ class EventsController(val calendarService: CalendarService, val userContext: Us
         }
 
         val event = Event(
-            attendee = attendee, description = createEventForm.description,
+            attendee = attendee,
+            description = createEventForm.description,
             owner = userContext.getCurrentUser(),
             summary = createEventForm.summary!!,
             `when` = createEventForm.`when`

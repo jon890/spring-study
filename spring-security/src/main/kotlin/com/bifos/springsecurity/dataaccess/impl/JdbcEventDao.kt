@@ -31,9 +31,9 @@ class JdbcEventDao(private val jdbcTemplate: JdbcTemplate) : EventDao {
     }
 
     override fun createEvent(event: Event): Int {
-        if (event.id == null) {
-            throw IllegalArgumentException("event.id must be null when creating a new Message")
-        }
+//        if (event.id == null) {
+//            throw IllegalArgumentException("event.id must be null when creating a new Message")
+//        }
 
         if (event.owner == null) {
             throw IllegalArgumentException("event.owner cannot be null")
