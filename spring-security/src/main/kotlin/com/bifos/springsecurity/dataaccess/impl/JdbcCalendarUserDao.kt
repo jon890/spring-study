@@ -21,19 +21,15 @@ class JdbcCalendarUserDao(private val jdbcTemplate: JdbcTemplate) : CalendarUser
 
     @Transactional(readOnly = true)
     override fun getUser(id: Int): CalendarUser {
-        val user = jdbcTemplate.queryForObject("${CALENDAR_USER_QUERY} id = ?", CALENDAR_USER_MAPPER, id)
-
-        if (user == null) {
-            throw RuntimeException("User not Found")
-        }
-
-        return user
+        val user = jdbcTemplate.queryForObject("$CALENDAR_USER_QUERY id = ?", CALENDAR_USER_MAPPER, id)
+        // JdbcTemplate에서 결과가 1개가 아니라면 예외 처리 됨
+        return user!!
     }
 
     @Transactional(readOnly = true)
     override fun findUserByEmail(email: String): CalendarUser? {
         return try {
-            jdbcTemplate.queryForObject("${CALENDAR_USER_QUERY} email = ?", CALENDAR_USER_MAPPER, email)
+            jdbcTemplate.queryForObject("$CALENDAR_USER_QUERY email = ?", CALENDAR_USER_MAPPER, email)
         } catch (notFound: EmptyResultDataAccessException) {
             null
         }
@@ -41,12 +37,14 @@ class JdbcCalendarUserDao(private val jdbcTemplate: JdbcTemplate) : CalendarUser
 
     @Transactional(readOnly = true)
     override fun findUsersByEmail(partialEmail: String): List<CalendarUser> {
+        // Kotlin 에서 null 처리를 했으므로
+        // "" 빈 문자열 처리만 하자
         if (partialEmail.isBlank()) {
             throw IllegalArgumentException("email cannot be empty string")
         }
 
         return jdbcTemplate.query(
-            "${CALENDAR_USER_QUERY} email like ? order by id",
+            "$CALENDAR_USER_QUERY email like ? order by id",
             CALENDAR_USER_MAPPER,
             "${partialEmail}%"
         )
@@ -54,7 +52,7 @@ class JdbcCalendarUserDao(private val jdbcTemplate: JdbcTemplate) : CalendarUser
 
     override fun createUser(user: CalendarUser): Int {
         if (user.id != null) {
-            throw java.lang.IllegalArgumentException("userToAdd.id must be null when creating a ${CalendarUser::class.simpleName}")
+            throw IllegalArgumentException("userToAdd.id must be null when creating a ${CalendarUser::class.simpleName}")
         }
 
         val keyHolder = GeneratedKeyHolder()

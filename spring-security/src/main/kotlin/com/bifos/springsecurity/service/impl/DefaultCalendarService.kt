@@ -5,6 +5,9 @@ import com.bifos.springsecurity.dataaccess.EventDao
 import com.bifos.springsecurity.domain.CalendarUser
 import com.bifos.springsecurity.domain.Event
 import com.bifos.springsecurity.service.CalendarService
+import org.springframework.security.core.authority.AuthorityUtils
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.provisioning.UserDetailsManager
 import org.springframework.stereotype.Service
 
 /**
@@ -12,12 +15,13 @@ import org.springframework.stereotype.Service
  * that delegates to [com.bifos.springsecurity.dataaccess.EventDao] and [com.bifos.springsecurity.dataaccess.CalendarUserDao].
  *
  * @author Rob Winch
+ * @author Mick Knuston
  * @author BiFoS (jon89071@gmail.com)
  */
 @Service
 class DefaultCalendarService(
     val eventDao: EventDao,
-    val userDao: CalendarUserDao
+    val userDao: CalendarUserDao,
 ) : CalendarService {
 
     override fun getUser(id: Int): CalendarUser {

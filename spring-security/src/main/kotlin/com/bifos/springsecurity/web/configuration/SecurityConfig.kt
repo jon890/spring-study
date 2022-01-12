@@ -1,15 +1,19 @@
 package com.bifos.springsecurity.web.configuration
 
+import com.bifos.springsecurity.authentication.CalendarUserAuthenticationProvider
+import com.bifos.springsecurity.authentication.DomainUsernamePasswordAuthenticationFilter
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 /**
  * Spring Security Config Class
@@ -17,43 +21,16 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+    val cuap: CalendarUserAuthenticationProvider
+) : WebSecurityConfigurerAdapter() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
     }
 
-    /**
-     * Configure AuthenticationManager with inMemory credentials.
-     *
-     * @param auth : AuthenticationManagerBuilder
-     * @throws Exception Authentication exception
-     */
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.inMemoryAuthentication()
-            .withUser("user").password("{noop}user").roles("USER")
-            .and().withUser("admin").password("{noop}admin").roles("USER", "ADMIN")
-            .and().withUser("user1@example.com").password("{noop}user1").roles("USER")
-            .and().withUser("admin1@example.com").password("{noop}admin1").roles("USER", "ADMIN")
-    }
-
-    /**
-     * The parent method from [WebSecurityConfigurerAdapter] [userDetailsService]
-     * originally returns a [org.springframework.security.core.userdetails.UserDetailsService],
-     * but this needs to boe a [org.springframework.security.provisioning.UserDetailsManager]
-     * UserDetailsManager vs UserDetailsService
-     *
-     */
-    @Bean
-    override fun userDetailsService(): UserDetailsService {
-        return InMemoryUserDetailsManager().apply {
-            this.createUser(User.withUsername("user").password("{noop}user").roles("USER").build())
-            this.createUser(User.withUsername("admin").password("{noop}admin").roles("USER", "ADMIN").build())
-            this.createUser(User.withUsername("user1@example.com").password("{noop}user1").roles("USER").build())
-            this.createUser(
-                User.withUsername("admin1@example.com").password("{noop}admin1").roles("USER", "ADMIN").build()
-            )
-        }
+        auth.authenticationProvider(cuap)
     }
 
     /**
@@ -82,48 +59,77 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
      * @see <a href="http://docs.spring.io/spring-security/site/migrate/current/3-to-4/html5/migrate-3-to-4-jc.html">
      *     Spring Security 3 to 4 migration</a>
      */
-    override fun configure(http: HttpSecurity?) {
-        http?.let {
-            it.authorizeRequests()
-                .antMatchers("/static/**").permitAll()
+    override fun configure(http: HttpSecurity) {
+        http.authorizeRequests()
+            .antMatchers("/").permitAll()
+            .antMatchers("/login/*").permitAll()
+            .antMatchers("/logout/*").permitAll()
+            .antMatchers("/signup/*").permitAll()
+            .antMatchers("/admin/*").hasRole("ADMIN")
+            .antMatchers("/events/").hasRole("ADMIN")
+            .antMatchers("/**").hasRole("USER")
 
-                // H2 console:
-                .antMatchers("/admin/h2/**").permitAll()
+            .and().exceptionHandling().accessDeniedPage("/errors/403")
+            .authenticationEntryPoint(loginUrlAuthenticationEntryPoint())
 
-                .antMatchers("/").permitAll()
-                // Spring Expression Language SPEL 을 이용하여 판별 가능
-//                .antMatchers("/").access("hasAnyRole('ANONYMOUS', 'USER'")
+            .and().formLogin()
+            .loginPage("/login/form")
+            .loginProcessingUrl("/login")
+            .failureUrl("/login/form?error")
+            .usernameParameter("username")
+            .passwordParameter("password")
 
-                .antMatchers("/login/*").permitAll()
-                .antMatchers("/logout/*").permitAll()
-                .antMatchers("/admin/*").hasRole("ADMIN")
-                .antMatchers("/events/").hasRole("ADMIN")
-                .antMatchers("/**").hasRole("USER")
+            // default로 로그인하기 전의 페이지로 이동하지만
+            // alwaysUse를 true로 주면 defaultSuccessUrl로 무조건 이동한다
+            .defaultSuccessUrl("/default", true)
+            .permitAll() // 무슨 의미일까?
 
-                .and().exceptionHandling().accessDeniedPage("/errors/403")
+            .and().logout()
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/login/form?logout")
+            .permitAll()
 
-                .and().formLogin()
-                .loginPage("/login/form")
-                .loginProcessingUrl("/login")
-                .failureUrl("/login/form?error")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/default", true)
-                .permitAll() // 무슨 의미일까?
+            .and().anonymous()
 
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login/form?logout")
-                .permitAll()
+            // CSRF is enabled by default, with Java Config
+            .and().csrf().disable()
 
-                .and().httpBasic()
+            .addFilterAt(domainUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
 
-                .and().anonymous()
+        // Enable <frameset> in order to use H2 web console
+        http.headers().frameOptions().disable()
+    }
 
-                // CSRF is enabled by default, with Java Config
-                .and().csrf().disable()
+    /**
+     * This is the equivalent to:
+     * <pre><http pattern="/resources/\\**" security="none"/></pre>
+     *
+     * @param web
+     * @throws Exception
+     */
+    override fun configure(web: WebSecurity) {
+        web.ignoring()
+            .antMatchers("/static/**")
+            .antMatchers("/webjars/**")
+    }
 
-            http.headers().frameOptions().disable()
+    @Bean
+    fun domainUsernamePasswordAuthenticationFilter(): DomainUsernamePasswordAuthenticationFilter {
+        return DomainUsernamePasswordAuthenticationFilter(super.authenticationManagerBean()).apply {
+            setFilterProcessesUrl("/login")
+            usernameParameter = "username"
+            passwordParameter = "password"
+            setAuthenticationSuccessHandler(SavedRequestAwareAuthenticationSuccessHandler().apply {
+                this.setDefaultTargetUrl(
+                    "/default"
+                )
+            })
+            setAuthenticationFailureHandler(SimpleUrlAuthenticationFailureHandler("/login/form?error"))
         }
+    }
+
+    @Bean
+    fun loginUrlAuthenticationEntryPoint(): LoginUrlAuthenticationEntryPoint {
+        return LoginUrlAuthenticationEntryPoint("/login/form")
     }
 }

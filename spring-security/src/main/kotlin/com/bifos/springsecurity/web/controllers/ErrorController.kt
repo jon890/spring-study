@@ -6,6 +6,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.servlet.ModelAndView
+
 
 @ControllerAdvice
 class ErrorController {
@@ -16,10 +18,19 @@ class ErrorController {
 
     @ExceptionHandler(Throwable::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleException(throwable: Throwable?, model: Model): String {
+    fun exception(throwable: Throwable?): ModelAndView? {
         logger.error("Exception during execution of SpringSecurity application", throwable)
-        val errorMessage = if (throwable != null) throwable.message else "Unknown error"
-        model.addAttribute("error", errorMessage)
-        return "error"
+
+        val sb = StringBuffer()
+        sb.append("Exception during execution of Spring Security application!  ")
+            .append(if (throwable?.message != null) throwable.message else "Unknown error")
+            .append(", root cause: ")
+            .append(if (throwable?.cause != null) throwable.cause else "Unknown cause")
+
+        return ModelAndView()
+            .apply {
+                addObject("error", sb.toString())
+                viewName = "error"
+            }
     }
 }

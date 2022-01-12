@@ -11,13 +11,19 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
-    <p>Chapter02.00: Below you can find some highlights about myCalendar. Each chapter will have a slightly different summary depending on what will be done.</p>
+    <p>Chapter 03.01: Below you can find some highlights about myCalendar. Each sample will have a slightly different summary depending on what has been done.</p>
+    <h2>Expression based authorization</h2>
     <ul>
-        <li><a id="eventsLink" th:href="@{/events/}">All Events</a> - shows all events for all users. Once secured, this will only be viewable by administrators.</li>
-        <li><a id="myEventsLink" th:href="@{events/my}">My Events</a> - shows all events that user1@example.com is the owner or attendee. Once we apply security only a logged in user
-            will be able to view this page. Additionally, the logged in user will be used rather than always using user1@example.com</li>
-        <li><a id="createEventLink" th:href="@{events/form}">Create Event</a> - will allow creating a new Event with user1@example.com as the owner. Once we add security, only a logged in
-            user will be able to view this page. Additionally, the logged in user will be the owner rather than always using user1@example.com.</li>
+        <li>The functionality hasn't changed since the last checkpoint, but feel free to give it a try.</li>
+        <li>Select a link that requires authentication and observe the new login page.</li>
+        <li>Try typing an invalid username/password and viewing the error message</li>
+        <li>Try logging in as an admin and viewing all events. Notice we are able to view all the events</li>
+        <li>Try logging in as a regular user and viewing all events (notice we get an access denied)</li>
+        <hr />
+        <li><a id="eventsLink" th:href="@{events/}">All Events</a> - shows all events for all users, but only allows administrators to access the page.</li>
+        <li><a id="myEventsLink" th:href="@{events/my}">My Events</a> - shows all events that user1@example.com is the owner or attendee. We will discuss in Chapter 3 how to obtain the current user's events.</li>
+        <li><a id="createEventLink" th:href="@{events/form}">Create Event</a> - will allow creating a new Event with user1@example.com as the owner. We will discuss in Chapter 3 how to make the current user the owner.</li>
+        <li><a id="logoutLink" th:href="@{/logout}">Logout</a> - we haven't discussed it yet, but you can logout using j_spring_security_logout. Later in in this chapter we will discuss how to customize logout and provide a logout link.</li>
         <li>
             <a id="h2Link" th:href="@{admin/h2/}" target="_blank">H2 Database Console</a> - Allows you to interact with the database using a web console. To use it:
             <ul>

@@ -1,27 +1,48 @@
 package com.bifos.springsecurity.service.impl
 
+import com.bifos.springsecurity.authentication.DomainUsernameAuthenticationToken
+import com.bifos.springsecurity.core.authority.CalendarUserAuthorityUtils
 import com.bifos.springsecurity.domain.CalendarUser
 import com.bifos.springsecurity.service.CalendarService
 import com.bifos.springsecurity.service.UserContext
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
 
+/**
+ * An implementation of [UserContext] that looks up the [CalendarUser] using the
+ * Spring Security's [org.springframework.security.core.Authentication] by principal name.
+ *
+ * @author Rob Winch
+ * @author BiFoS (jon89071@gmail.com)
+ *
+ */
 @Component
-class SpringSecurityUserContext(
-    private val calendarService: CalendarService,
-    private val userDetailsService: UserDetailsService
-) : UserContext {
+class SpringSecurityUserContext(val calendarService: CalendarService) : UserContext {
 
+    /**
+     * Get the [CalendarUser] by obtaining the currently logged in Spring Security user's
+     * [org.springframework.security.core.Authentication.getName] and using that to find the
+     * [CalendarUser] by email address (since for our application Spring Security usernames
+     * are email addresses).
+     */
     override fun getCurrentUser(): CalendarUser? {
         val context = SecurityContextHolder.getContext()
-        val authentication = context.authentication ?: return null
+        val authentication = context.authentication as DomainUsernameAuthenticationToken ?: return null
 
-        val email = authentication.name
-        return calendarService.findUserByEmail(email)
+        val username = authentication.principal
+        val domain = authentication.domain
+        val email = "${username}@${domain}"
+        val user = calendarService.findUserByEmail(email)
+            ?: throw UsernameNotFoundException("User not found!! Security Error!!")
+        return user
     }
 
     override fun setCurrentUser(user: CalendarUser) {
-        throw UnsupportedOperationException()
+        val authorities = CalendarUserAuthorityUtils.createAuthorities(user)
+        val usernameAndDomain = user.email.split("@")
+        val authentication =
+            DomainUsernameAuthenticationToken(usernameAndDomain[0], user.password, authorities, usernameAndDomain[1])
+        SecurityContextHolder.getContext().authentication = authentication
     }
 }

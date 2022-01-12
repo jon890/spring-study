@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 
 /**
- * {@link CalendarUser} is this applications notion of a user. It is good to use your own objects to interact with a
+ * [CalendarUser] is this applications notion of a user. It is good to use your own objects to interact with a
  * user especially in large applications. This ensures that as you evolve your security requirements (update Spring
  * Security, leverage new Spring Security modules, or even swap out security implementations) you can do so easily.
  *
  * @author Rob Winch (converted by BiFoS)
  *
  */
-class CalendarUser(
+open class CalendarUser(
+
     var firstName: String,
 
     var lastName: String,
@@ -24,8 +25,9 @@ class CalendarUser(
      *
      * @return
      */
+    @get:JvmName("getPassword1")
     @get:JsonIgnore
-    var password: String? = null
+    open var password: String
 
 ) : Serializable {
 

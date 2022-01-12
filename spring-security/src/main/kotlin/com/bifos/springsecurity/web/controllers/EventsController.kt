@@ -4,6 +4,7 @@ import com.bifos.springsecurity.domain.Event
 import com.bifos.springsecurity.service.CalendarService
 import com.bifos.springsecurity.service.UserContext
 import com.bifos.springsecurity.web.model.CreateEventForm
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult

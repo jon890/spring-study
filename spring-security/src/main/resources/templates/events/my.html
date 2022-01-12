@@ -11,6 +11,10 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
+    <!--<div th:if="${message != null}" class="alert alert-success">
+        <span th:text="${message}"></span>
+    </div>-->
+
     <p id="description">
         Below you can find the events for
         <strong th:text="${currentUser.email}"></strong>.
@@ -28,7 +32,7 @@
         </thead>
         <tbody>
         <tr th:if="${events.empty}">
-            <td colspan="2" class="msg">No events.</td>
+            <td colspan="4" class="msg">No events.</td>
         </tr>
         <tr th:each="event : ${events}">
 

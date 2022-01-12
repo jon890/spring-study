@@ -21,6 +21,13 @@ import org.springframework.web.servlet.config.annotation.*
 @EnableWebMvc
 class WebMvcConfig : WebMvcConfigurer {
 
+    companion object {
+        private val CLASSPATH_RESOURCE_LOCATIONS = listOf(
+            "classpath:/META-INF/resources/", "classpath:/resources",
+            "classpath:/static/", "classpath:/public"
+        )
+    }
+
     // 간단하게 url ~ view 매핑
     override fun addViewControllers(registry: ViewControllerRegistry) {
         registry.addViewController("/").setViewName("index")
@@ -31,8 +38,19 @@ class WebMvcConfig : WebMvcConfigurer {
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("/static/**")
-            .addResourceLocations("classpath:/static/")
-            .setCachePeriod(31_556_926)
+        registry.addResourceHandler("/resources/**")
+            .addResourceLocations("c/resources")
+            .setCachePeriod(0) // Set to 0 in order to send cache headers that prevent caching
+
+        // Add WebJars for Bootstrap & jQuery
+        if (!registry.hasMappingForPattern("/webjars/**")) {
+            registry.addResourceHandler("/webjars/**").addResourceLocations(
+                "classpath:/META-INF/resources/webjars/"
+            ).resourceChain(true)
+        }
+
+        if (!registry.hasMappingForPattern("/**")) {
+            registry.addResourceHandler("/**").addResourceLocations(*CLASSPATH_RESOURCE_LOCATIONS.toTypedArray())
+        }
     }
 }
