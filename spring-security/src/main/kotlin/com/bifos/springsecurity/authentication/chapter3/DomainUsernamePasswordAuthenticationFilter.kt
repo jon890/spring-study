@@ -1,4 +1,4 @@
-package com.bifos.springsecurity.authentication
+package com.bifos.springsecurity.authentication.chapter3
 
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationServiceException

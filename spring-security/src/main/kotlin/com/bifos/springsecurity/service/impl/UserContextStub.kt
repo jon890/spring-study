@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
  * This is used prior to adding security,
  * so that the rest of the application can be used.
  */
-//@Component
+@Component
 class UserContextStub(
     private val userService: CalendarUserDao
 ) : UserContext {

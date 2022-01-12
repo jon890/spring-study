@@ -1,3 +1,4 @@
+-- @see schema.sql
 create table calendar_users (
     id bigint identity,
     email varchar(256) not null unique,

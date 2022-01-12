@@ -1,32 +1,34 @@
-package com.bifos.springsecurity.web.configuration
+package com.bifos.springsecurity.web.configuration.chapter3
 
+import com.bifos.springsecurity.authentication.chapter3.CalendarUserAuthenticationProvider
+import com.bifos.springsecurity.authentication.chapter3.DomainUsernamePasswordAuthenticationFilter
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.provisioning.JdbcUserDetailsManager
-import org.springframework.security.provisioning.UserDetailsManager
-import javax.sql.DataSource
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 /**
  * Spring Security Config Class
  * @see WebSecurityConfigurerAdapter
  */
-@Configuration
-@EnableWebSecurity
-class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter() {
+//@Configuration
+//@EnableWebSecurity
+class SecurityConfig(
+    val cuap: CalendarUserAuthenticationProvider
+) : WebSecurityConfigurerAdapter() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.jdbcAuthentication()
-            .dataSource(dataSource)
+        auth.authenticationProvider(cuap)
     }
 
     /**
@@ -57,9 +59,6 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
      */
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-            // FIXME: TODO: Allow anyone to use H2 (NOTE: NOT FOR PRODUCTION USE EVER !!! )
-            .antMatchers("/admin/h2/**").permitAll()
-
             .antMatchers("/").permitAll()
             .antMatchers("/login/*").permitAll()
             .antMatchers("/logout/*").permitAll()
@@ -69,6 +68,7 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
             .antMatchers("/**").hasRole("USER")
 
             .and().exceptionHandling().accessDeniedPage("/errors/403")
+            .authenticationEntryPoint(loginUrlAuthenticationEntryPoint())
 
             .and().formLogin()
             .loginPage("/login/form")
@@ -92,6 +92,8 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
             // CSRF is enabled by default, with Java Config
             .and().csrf().disable()
 
+            .addFilterAt(domainUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+
         // Enable <frameset> in order to use H2 web console
         http.headers().frameOptions().disable()
     }
@@ -110,12 +112,22 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
     }
 
     @Bean
-    override fun userDetailsService(): UserDetailsManager {
-        // this 때문에 겹침 현상..
-        val _dataSource = this.dataSource
-
-        return JdbcUserDetailsManager().apply {
-            this.setDataSource(_dataSource)
+    fun domainUsernamePasswordAuthenticationFilter(): DomainUsernamePasswordAuthenticationFilter {
+        return DomainUsernamePasswordAuthenticationFilter(super.authenticationManagerBean()).apply {
+            setFilterProcessesUrl("/login")
+            usernameParameter = "username"
+            passwordParameter = "password"
+            setAuthenticationSuccessHandler(SavedRequestAwareAuthenticationSuccessHandler().apply {
+                this.setDefaultTargetUrl(
+                    "/default"
+                )
+            })
+            setAuthenticationFailureHandler(SimpleUrlAuthenticationFailureHandler("/login/form?error"))
         }
+    }
+
+    @Bean
+    fun loginUrlAuthenticationEntryPoint(): LoginUrlAuthenticationEntryPoint {
+        return LoginUrlAuthenticationEntryPoint("/login/form")
     }
 }

@@ -1,4 +1,4 @@
-package com.bifos.springsecurity.authentication
+package com.bifos.springsecurity.authentication.chapter3
 
 import com.bifos.springsecurity.domain.CalendarUser
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

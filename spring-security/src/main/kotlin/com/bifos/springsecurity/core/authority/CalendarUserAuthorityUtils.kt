@@ -15,18 +15,16 @@ import org.springframework.security.core.authority.AuthorityUtils
  * @author Mick Knutson
  * @author BiFoS (jon89071@gmail.com)
  */
-class CalendarUserAuthorityUtils private constructor() {
+object CalendarUserAuthorityUtils {
 
-    companion object {
-        private val ADMIN_ROLES = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER")
-        private val USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER")
+    private val ADMIN_ROLES = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER")
+    private val USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER")
 
-        fun createAuthorities(calendarUser: CalendarUser): Collection<out GrantedAuthority> {
-            val username = calendarUser.email
-            if (username.startsWith("admin")) {
-                return ADMIN_ROLES
-            }
-            return USER_ROLES
+    fun createAuthorities(calendarUser: CalendarUser): Collection<out GrantedAuthority> {
+        val username = calendarUser.email
+        if (username.startsWith("admin")) {
+            return ADMIN_ROLES
         }
+        return USER_ROLES
     }
 }

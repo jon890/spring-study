@@ -1,4 +1,4 @@
-package com.bifos.springsecurity.service.impl
+package com.bifos.springsecurity.service.impl.chapter3
 
 import com.bifos.springsecurity.core.authority.CalendarUserAuthorityUtils
 import com.bifos.springsecurity.dataaccess.CalendarUserDao
@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.stereotype.Component
 
 /**
  * CalendarUserAuthenticationProvider 로 대체된다

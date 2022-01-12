@@ -1,13 +1,12 @@
-package com.bifos.springsecurity.service.impl
+package com.bifos.springsecurity.service.impl.chapter3
 
-import com.bifos.springsecurity.authentication.DomainUsernameAuthenticationToken
+import com.bifos.springsecurity.authentication.chapter3.DomainUsernameAuthenticationToken
 import com.bifos.springsecurity.core.authority.CalendarUserAuthorityUtils
 import com.bifos.springsecurity.domain.CalendarUser
 import com.bifos.springsecurity.service.CalendarService
 import com.bifos.springsecurity.service.UserContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.stereotype.Component
 
 /**
  * An implementation of [UserContext] that looks up the [CalendarUser] using the
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component
  * @author BiFoS (jon89071@gmail.com)
  *
  */
-@Component
+//@Component
 class SpringSecurityUserContext(val calendarService: CalendarService) : UserContext {
 
     /**

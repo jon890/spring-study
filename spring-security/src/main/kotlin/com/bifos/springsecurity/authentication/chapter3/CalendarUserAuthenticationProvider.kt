@@ -1,4 +1,4 @@
-package com.bifos.springsecurity.authentication
+package com.bifos.springsecurity.authentication.chapter3
 
 import com.bifos.springsecurity.core.authority.CalendarUserAuthorityUtils
 import com.bifos.springsecurity.service.CalendarService

@@ -21,7 +21,8 @@
                     <ul class="nav navbar-nav pull-right" sec:authorize="isAuthenticated()">
                         <li>
                             <p class="navbar-text">Welcome
-                            <div class="navbar-text" sec:authentication="principal">User</div>
+                            <!--<div class="navbar-text" sec:authentication="principal">User</div>-->
+                            <div class="navbar-text" sec:authentication="principal.username">User</div>
                             </p>
                         </li>
                         <li>
