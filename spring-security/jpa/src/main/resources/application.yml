@@ -1,0 +1,15 @@
+database: h2
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:dataSource;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+    schema: classpath*:database/${database}/calendar-schema.sql
+    data: classpath*:database/${database}/calendar-data.sql,classpath*:database/${database}/calendar-authorities.sql,classpath*:database/${database}/calendar-bcrypt.sql
+
+  h2:
+    console:
+      enabled: true
+      path: /admin/h2
