@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
  *
  */
 //@Component
-class SpringSecurityUserContext(val calendarService: CalendarService) : UserContext {
+class SpringSecurityUserContext(private val calendarService: CalendarService) : UserContext {
 
     /**
      * Get the [CalendarUser] by obtaining the currently logged in Spring Security user's

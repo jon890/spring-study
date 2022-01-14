@@ -5,9 +5,8 @@ import com.bifos.springsecurity.dataaccess.EventDao
 import com.bifos.springsecurity.domain.CalendarUser
 import com.bifos.springsecurity.domain.Event
 import com.bifos.springsecurity.service.CalendarService
-import org.springframework.security.core.authority.AuthorityUtils
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.provisioning.UserDetailsManager
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 /**
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Service
 class DefaultCalendarService(
     val eventDao: EventDao,
     val userDao: CalendarUserDao,
+    val jdbcTemplate: JdbcTemplate,
+    val passwordEncoder: PasswordEncoder
 ) : CalendarService {
 
     override fun getUser(id: Int): CalendarUser {
@@ -37,7 +38,19 @@ class DefaultCalendarService(
     }
 
     override fun createUser(user: CalendarUser): Int {
-        return userDao.createUser(user)
+        // password encode
+        val encodedPassword = passwordEncoder.encode(user.password)
+        user.password = encodedPassword
+
+        val userId = userDao.createUser(user)
+
+        jdbcTemplate.update(
+            "insert into " +
+                    "calendar_user_authorities(calendar_user, authority) " +
+                    "values(?,?)", userId, "ROLE_USER"
+        )
+
+        return userId
     }
 
     override fun getEvent(eventId: Int): Event {

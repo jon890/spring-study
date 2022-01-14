@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
  */
 //@Component
 class CalendarUserDetailsService(
-    val calendarUserDao: CalendarUserDao
+    private val calendarUserDao: CalendarUserDao
 ) : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)

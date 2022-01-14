@@ -6,8 +6,8 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password: password
-    schema: classpath*:database/${database}/*schema.sql
-    data: classpath*:database/${database}/calendar-data.sql,classpath*:database/${database}/security-users.sql,classpath*:database/${database}/security-user-authorities.sql
+    schema: classpath*:database/${database}/calendar-schema.sql
+    data: classpath*:database/${database}/calendar-data.sql,classpath*:database/${database}/calendar-authorities.sql,classpath*:database/${database}/calendar-bcrypt.sql
 
   h2:
     console:

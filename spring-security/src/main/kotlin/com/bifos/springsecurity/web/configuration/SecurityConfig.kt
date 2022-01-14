@@ -8,25 +8,69 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.provisioning.JdbcUserDetailsManager
 import org.springframework.security.provisioning.UserDetailsManager
 import javax.sql.DataSource
+
 
 /**
  * Spring Security Config Class
  * @see WebSecurityConfigurerAdapter
  */
 @Configuration
-@EnableWebSecurity
-class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter() {
+@EnableWebSecurity(debug = true)
+class SecurityConfig(private val dataSource: DataSource) : WebSecurityConfigurerAdapter() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
+
+        private const val CUSTOM_CREATE_USER_SQL =
+            "insert into calendar_users (username, password, enabled) values (?,?,?)"
+
+        private const val CUSTOM_GROUP_AUTHORITIES_BY_USERNAME_QUERY = "select g.id, g.group_name, ga.authority " +
+                "from groups g, group_members gm, " +
+                "group_authorities ga where gm.username = ? " +
+                "and g.id = ga.group_id and g.id = gm.group_id"
+
+        private const val CUSTOM_USERS_BY_USERNAME_QUERY = "select email, password, true " +
+                "from calendar_users where email = ?"
+
+        private const val CUSTOM_AUTHORITIES_BY_USERNAME_QUERY = "select cua.id, cua.authority " +
+                "from calendar_users cu, calendar_user_authorities " +
+                "cua where cu.email = ? " +
+                "and cu.id = cua.calendar_user"
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.jdbcAuthentication()
             .dataSource(dataSource)
+            .usersByUsernameQuery(CUSTOM_USERS_BY_USERNAME_QUERY)
+            .authoritiesByUsernameQuery(CUSTOM_AUTHORITIES_BY_USERNAME_QUERY)
+            .passwordEncoder(passwordEncoder())
+    }
+
+    /**
+     * The parent method from [WebSecurityConfigurerAdapter.userDetailsService]
+     * originally returns a [UserDetailsService], but this needs to be a [UserDetailsManager]
+     * UserDetailsManager vs UserDetailsService
+     */
+    @Bean
+    override fun userDetailsService(): UserDetailsManager {
+        val _dataSource = this.dataSource
+
+        return object : JdbcUserDetailsManager() {
+            init {
+                setDataSource(_dataSource)
+                // Override default SQL for JdbcUserDetailsManager
+                setGroupAuthoritiesByUsernameQuery(CUSTOM_GROUP_AUTHORITIES_BY_USERNAME_QUERY)
+                usersByUsernameQuery = CUSTOM_USERS_BY_USERNAME_QUERY
+                authoritiesByUsernameQuery = CUSTOM_AUTHORITIES_BY_USERNAME_QUERY
+                // TODO: This is not available through AuthenticationManagerBuilder
+                setCreateUserSql(CUSTOM_CREATE_USER_SQL)
+            }
+        }
     }
 
     /**
@@ -64,6 +108,7 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
             .antMatchers("/login/*").permitAll()
             .antMatchers("/logout/*").permitAll()
             .antMatchers("/signup/*").permitAll()
+            .antMatchers("/errors/**").permitAll()
             .antMatchers("/admin/*").hasRole("ADMIN")
             .antMatchers("/events/").hasRole("ADMIN")
             .antMatchers("/**").hasRole("USER")
@@ -76,7 +121,6 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
             .failureUrl("/login/form?error")
             .usernameParameter("username")
             .passwordParameter("password")
-
             // default로 로그인하기 전의 페이지로 이동하지만
             // alwaysUse를 true로 주면 defaultSuccessUrl로 무조건 이동한다
             .defaultSuccessUrl("/default", true)
@@ -110,12 +154,7 @@ class SecurityConfig(val dataSource: DataSource) : WebSecurityConfigurerAdapter(
     }
 
     @Bean
-    override fun userDetailsService(): UserDetailsManager {
-        // this 때문에 겹침 현상..
-        val _dataSource = this.dataSource
-
-        return JdbcUserDetailsManager().apply {
-            this.setDataSource(_dataSource)
-        }
+    fun passwordEncoder(): BCryptPasswordEncoder {
+        return BCryptPasswordEncoder()
     }
 }
