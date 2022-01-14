@@ -1,4 +1,4 @@
-package com.bifos.springsecurity.service.impl.chapter3
+package com.bifos.springsecurity.core.userdetails
 
 import com.bifos.springsecurity.core.authority.CalendarUserAuthorityUtils
 import com.bifos.springsecurity.dataaccess.CalendarUserDao
@@ -7,11 +7,17 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.stereotype.Component
 
 /**
- * CalendarUserAuthenticationProvider 로 대체된다
+ * Integrates with Spring Security using our existing [CalendarUserDao] by looking up a
+ * [CalendarUser] and converting it into a [UserDetails] so that Spring Security can do the
+ * username/password comparison for us.
+ *
+ * @author Rob Winch
+ * @author BiFoS (jon89071@gmail.com)
  */
-//@Component
+@Component
 class CalendarUserDetailsService(
     private val calendarUserDao: CalendarUserDao
 ) : UserDetailsService {

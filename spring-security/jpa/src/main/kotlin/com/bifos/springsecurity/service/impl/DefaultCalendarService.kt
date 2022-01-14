@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service
 class DefaultCalendarService(
     val eventDao: EventDao,
     val userDao: CalendarUserDao,
-    val jdbcTemplate: JdbcTemplate,
     val passwordEncoder: PasswordEncoder
 ) : CalendarService {
 
@@ -43,13 +42,6 @@ class DefaultCalendarService(
         user.password = encodedPassword
 
         val userId = userDao.createUser(user)
-
-        jdbcTemplate.update(
-            "insert into " +
-                    "calendar_user_authorities(calendar_user, authority) " +
-                    "values(?,?)", userId, "ROLE_USER"
-        )
-
         return userId
     }
 

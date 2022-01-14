@@ -9,6 +9,14 @@ plugins {
     kotlin("plugin.jpa") version "1.6.0"
 }
 
+allOpen {
+    annotation("javax.persistence.Entity") // @Entity 가 붙은 클래스에 한해서 all open 플러그인 적용
+}
+
+noArg {
+    annotation("javax.persistence.Entity") // @Entity 가 붙은 클래스에 한해서 no arg 플러그인 적용
+}
+
 group "com.bifos"
 version "1.0-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
@@ -20,10 +28,10 @@ dependencies {
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // security - core, config, web 포함
     implementation("org.springframework.boot:spring-boot-starter-security")

@@ -7,7 +7,8 @@ import com.bifos.springsecurity.domain.Event
 /**
  * An interface for managing {@link Event}'s.
  *
- * @author Rob Winch (converted by BiFoS)
+ * @author Rob Winch
+ * @author BiFoS (jon89071@gmail.com)
  */
 interface EventDao {
 

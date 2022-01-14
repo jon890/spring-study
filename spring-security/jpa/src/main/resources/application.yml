@@ -1,15 +1,27 @@
-database: h2
-
 spring:
   datasource:
     url: jdbc:h2:mem:dataSource;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
-    password: password
-    schema: classpath*:database/${database}/calendar-schema.sql
-    data: classpath*:database/${database}/calendar-data.sql,classpath*:database/${database}/calendar-authorities.sql,classpath*:database/${database}/calendar-bcrypt.sql
+    password:
+    continue-on-error: true
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true # data.sql 실행
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+    hiberante:
+      ddl-auto: create-drop
 
   h2:
     console:
       enabled: true
+      settings:
+        web-allow-others: true
       path: /admin/h2

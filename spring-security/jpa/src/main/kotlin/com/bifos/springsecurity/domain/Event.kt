@@ -1,6 +1,7 @@
 package com.bifos.springsecurity.domain
 
 import java.util.*
+import javax.persistence.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
@@ -9,24 +10,35 @@ import javax.validation.constraints.NotNull
  * (someone who was invited to the event), when the event will occur, a summary, and a description. For simplicity, all
  * fields are required.
  *
- * @author Rob Winch (converted by BiFoS)
+ * @author Rob Winch
+ * @author BiFoS (jon89071@gmail.com)
  *
  */
+@Entity
+@Table(name = "events")
 class Event(
-    val summary: String,
 
     @field:NotEmpty(message = "Summary is required")
-    var description: String? = null,
+    val summary: String,
 
     @field:NotEmpty(message = "Description is required")
-    var `when`: Calendar? = null,
+    var description: String? = null,
 
     @field:NotNull(message = "When is required")
+    var `when`: Calendar? = null,
+
+    @field:NotNull(message = "Owner is required")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner", referencedColumnName = "id")
     var owner: CalendarUser? = null,
 
-    @field:NotNull(message = "Summary is required")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attendee", referencedColumnName = "id")
     var attendee: CalendarUser? = null
 ) {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Int? = null
 
     override fun equals(other: Any?): Boolean {

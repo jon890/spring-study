@@ -2,15 +2,19 @@ package com.bifos.springsecurity.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
+import javax.persistence.*
 
 /**
  * [CalendarUser] is this applications notion of a user. It is good to use your own objects to interact with a
  * user especially in large applications. This ensures that as you evolve your security requirements (update Spring
  * Security, leverage new Spring Security modules, or even swap out security implementations) you can do so easily.
  *
- * @author Rob Winch (converted by BiFoS)
+ * @author Rob Winch
+ * @author BiFoS (jon89071@gmail.com)
  *
  */
+@Entity
+@Table(name = "calendar_users")
 open class CalendarUser(
 
     var firstName: String,
@@ -27,7 +31,15 @@ open class CalendarUser(
      */
     @get:JvmName("getPassword1")
     @get:JsonIgnore
-    open var password: String
+    open var password: String,
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_role",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    val roles: MutableSet<Role> = mutableSetOf()
 
 ) : Serializable {
 
@@ -35,6 +47,8 @@ open class CalendarUser(
         private const val serialVersionUID = 8433999509932007961L
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Int? = null
 
     @JsonIgnore
@@ -63,5 +77,4 @@ open class CalendarUser(
         result = 31 * result + (id ?: 0)
         return result
     }
-
 }

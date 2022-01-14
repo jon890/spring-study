@@ -39,7 +39,7 @@ class WebMvcConfig : WebMvcConfigurer {
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/resources/**")
-            .addResourceLocations("c/resources")
+            .addResourceLocations("/resources")
             .setCachePeriod(0) // Set to 0 in order to send cache headers that prevent caching
 
         // Add WebJars for Bootstrap & jQuery
