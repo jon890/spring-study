@@ -2,6 +2,7 @@ package com.bifos.springsecurity.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
+import java.security.Principal
 import javax.persistence.*
 
 /**
@@ -15,7 +16,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "calendar_users")
-open class CalendarUser(
+class CalendarUser(
 
     var firstName: String,
 
@@ -41,7 +42,7 @@ open class CalendarUser(
     )
     val roles: MutableSet<Role> = mutableSetOf()
 
-) : Serializable {
+) : Principal, Serializable {
 
     companion object {
         private const val serialVersionUID = 8433999509932007961L
@@ -52,8 +53,8 @@ open class CalendarUser(
     var id: Int? = null
 
     @JsonIgnore
-    fun getName(): String {
-        return "${lastName}, ${firstName}"
+    override fun getName(): String {
+        return email
     }
 
     override fun equals(other: Any?): Boolean {

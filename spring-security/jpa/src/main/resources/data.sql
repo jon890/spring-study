@@ -4,11 +4,11 @@
 -- New Calendar Users --
 
 -- Password for user1 was 'user1'
-insert into calendar_users(id,username,email,password,first_name,last_name) values (0,'user1@example.com','user1@example.com','$2a$04$qr7RWyqOnWWC1nwotUW1nOe1RD5.mKJVHK16WZy6v49pymu1WDHmi','User','1');
+insert into calendar_users(id,email,password,first_name,last_name) values (0,'user1@example.com','$2a$04$qr7RWyqOnWWC1nwotUW1nOe1RD5.mKJVHK16WZy6v49pymu1WDHmi','User','1');
 -- Password for admin was 'admin'
-insert into calendar_users(id,username,email,password,first_name,last_name) values (1,'admin1@example.com','admin1@example.com','$2a$04$0CF/Gsquxlel3fWq5Ic/ZOGDCaXbMfXYiXsviTNMQofWRXhvJH3IK','Admin','1');
+insert into calendar_users(id,email,password,first_name,last_name) values (1,'admin1@example.com','$2a$04$0CF/Gsquxlel3fWq5Ic/ZOGDCaXbMfXYiXsviTNMQofWRXhvJH3IK','Admin','1');
 -- Password for user2 was 'user2'
-insert into calendar_users(id,username,email,password,first_name,last_name) values (2,'user2@example.com','user2@example.com','$2a$04$PiVhNPAxunf0Q4IMbVeNIuH4M4ecySWHihyrclxW..PLArjLbg8CC','User2','2');
+insert into calendar_users(id,email,password,first_name,last_name) values (2,'user2@example.com','$2a$04$PiVhNPAxunf0Q4IMbVeNIuH4M4ecySWHihyrclxW..PLArjLbg8CC','User2','2');
 
 
 -- ROLES --

@@ -18,7 +18,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
  * @see WebSecurityConfigurerAdapter
  */
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 class SecurityConfig(private val calendarUserDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
 
     companion object {
