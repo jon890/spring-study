@@ -1,0 +1,2 @@
+com.bifos.config.autoconfig.TomcatWebServerConfig
+com.bifos.config.autoconfig.DispatcherServletConfig
