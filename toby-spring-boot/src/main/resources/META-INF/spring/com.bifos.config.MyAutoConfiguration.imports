@@ -1,2 +1,3 @@
 com.bifos.config.autoconfig.TomcatWebServerConfig
+com.bifos.config.autoconfig.JettyWebServerConfig
 com.bifos.config.autoconfig.DispatcherServletConfig
